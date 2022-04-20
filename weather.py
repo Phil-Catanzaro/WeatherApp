@@ -9,31 +9,56 @@ Created on Tue Apr 19 16:55:08 2022
 import requests
 from bs4 import BeautifulSoup #importing Beautiful Soup to parse html document
 import json #to do deal with json data
-    
-apiKey = "WglGPa98rTeev9F5D4W0DbYxyGu9tj24"
-zip = "41073"
+from uszipcode import SearchEngine #USZipcode pacakge for zipcode to city conversions
+import nltk #edit distance metrix used to test for word similarity when sanitizing city outputs 
 
-#get location ID
-response = requests.get("http://dataservice.accuweather.com/locations/v1/postalcodes/search?apikey=" + apiKey + "&q=" + zip)
-if (response.status_code == 200): #if we reached website without error
+#sanitize city/zipcode input
+def checkCityZip(city):
+    engine = SearchEngine()
+    if (city.isalpha()): #city check
+        zipcodes = engine.by_city(city=city)
+        
+        #using edit distance to test for similarity in closest city and the search entry
+        nearestCity = zipcodes[0].major_city
+        distance = nltk.edit_distance(nearestCity, city) 
+
+        #find shorter word
+        if (len(city)<len(nearestCity)):
+            comparisonlength = len(city) 
+        else:
+            comparisonlength = len(nearestCity)
+        
+        #checking if distance between words is greater than length of the smallest word
+        if (distance > comparisonlength):
+            return False
+        else:
+            return True
+        
+    else: #zipcode check
+        zipcodes = engine.by_zipcode(city)
+        if (zipcodes is None): #checking to see if no matches for zipcode
+            return False
+        else:
+            return True
+
     
-    dictionary = response.json()[0] # respoonse as JSON
-    #reponse.json() gives us a list with a dictionary inside, so we have to specify [0] to get the first item of the list, the dictionary itself
-    locationID = dictionary["Key"]
-    print("Location ID:", locationID)
+apiKey = "e1533dfe0d2449f9ac6210053222004"
+cityOrZip = "London"
+if (checkCityZip(cityOrZip) == True):
+    
+    
+    print(cityOrZip)
+    
+    response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + cityOrZip + "&aqi=no")
+    if (response.status_code == 200): #if we reached website without error
+        dictionary = response.json() # respoonse as JSON
+        temperature = dictionary["current"]["temp_f"]
+        description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
+        print(temperature, "\N{DEGREE SIGN}F", "and", description)
+    
+    else:
+        print("API Error.")
     
 else:
-    print("API Error.")
+    print("Invalid city name or zip code") 
     
-    
-#get weather
-
-response = requests.get("http://dataservice.accuweather.com/currentconditions/v1/" + locationID + "?apikey=" + apiKey)
-if (response.status_code == 200): #if we reached website without error
-    dictionary2 = response.json()[0] # respoonse as JSON
-    #reponse.json() gives us a list with a dictionary inside, so we have to specify [0] to get the first item of the list, the dictionary itself
-    #temperature = dictionary2.get("Temperature.Imperial.Value")
-    temperature = dictionary2["Temperature"]["Imperial"]["Value"]
-    description = dictionary2["WeatherText"].title() #title() capitalizes first letter of each word in string
-    print(temperature, "\N{DEGREE SIGN}F", "and", description)
-    #print(temperature + "degrees Farenheit")
