@@ -1,3 +1,5 @@
 # WeatherApp
 
-Basic weather app where I plan to utilize Python, JSON, and Swift to display the weather on an IOS app.
+Deployment 1: Basic weather app where I plan to utilize Python, Flask, and GoogleCloud to create an online weather application.
+
+Deployment 2: Using Swift to create similar weather tool as an IOS app.
