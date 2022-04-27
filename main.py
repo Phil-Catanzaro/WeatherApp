@@ -5,7 +5,7 @@ Created on Tue Apr 19 16:55:08 2022
 
 @author: phillipcatanzaro
 """
-from flask import Flask #importing Flask class
+from flask import Flask, render_template #importing Flask class and render_template for html templates
 from flask import request
 
 import requests
@@ -16,24 +16,44 @@ import nltk #edit distance metrix used to test for word similarity when sanitizi
 
 
 app = Flask(__name__) #creating flask app
-
-
  
 @app.route("/") #decorator that Flask uses to connect URL endpoints with code contained in functions
-def index():
-    city = request.args.get("city", "")
-    return (
-        """<form action="" method="get">
-            <input type="text" name="city" />
-            <input type="submit" value="Get Temperature" />
-        </form>"""
-        + city 
-    )
-    return "Weather App."
-        
-@app.route("/<city>") #occurs when someone adds city parameter to url
+@app.route("/home") #decorator that Flask uses to connect URL endpoints with code contained in functions
+def weather_form():
+    return render_template('weather-form.html')
 
-#sanitize city/zipcode input
+    # city = request.args.get("city", "")
+    # return (
+        # """<form action="" method="get">
+        #     <input type="text" name="city">
+        #     <input type="submit" value="Get Temperature">
+        # </form>"""
+    #     + city #returns city name back to the url 
+    # )        
+
+
+@app.route("/", methods=["POST"]) #occurs when city parameter is added to url
+def weather_form_post():
+    city = request.form.get("text", "") #gets text from inputted form
+   #issue is that "city" is empty at this point 
+    return(str(city))
+    # city = city.strip() #stripping spaces from text
+    
+    # apiKey = "e1533dfe0d2449f9ac6210053222004"
+    # if (checkCityZip(city) == True):
+    #     response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + city + "&aqi=no")
+    #     if (response.status_code == 200): #if we reached website without error
+    #         dictionary = response.json() # respoonse as JSON
+    #         temperature = dictionary["current"]["temp_f"]
+    #         description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
+    #         return(str(temperature))        
+    #     else:
+    #         return "API Error"
+    
+    # else:
+    #     return "Invalid city name or zip code"
+    
+
 def checkCityZip(city):
     engine = SearchEngine()
     if (city.isalpha()): #city check
@@ -61,25 +81,30 @@ def checkCityZip(city):
             return False
         else:
             return True
-        
-def getTemp(city):
-    apiKey = "e1533dfe0d2449f9ac6210053222004"
-    if (checkCityZip(cityOrZip) == True):
-        response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + city + "&aqi=no")
-        if (response.status_code == 200): #if we reached website without error
-            dictionary = response.json() # respoonse as JSON
-            temperature = dictionary["current"]["temp_f"]
-            description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
-            return(str(temperature))        
-        else:
-            return "API Error"
-    
-    else:
-        return "Invalid city name or zip code"
 
-if __name__ == "__main__":
-    cityOrZip = input("Enter City or Zip Code: ")
-    print(getTemp(cityOrZip)[0], "\N{DEGREE SIGN}F", "and", getTemp(cityOrZip)[1])
+    
+# @app.route("/<city>") #occurs when city parameter is added to url
+# #sanitize city/zipcode input
+# def getTemp(city):
+#     apiKey = "e1533dfe0d2449f9ac6210053222004"
+#     if (checkCityZip(city) == True):
+#         response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + city + "&aqi=no")
+#         if (response.status_code == 200): #if we reached website without error
+#             dictionary = response.json() # respoonse as JSON
+#             temperature = dictionary["current"]["temp_f"]
+#             description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
+#             return(str(temperature))        
+#         else:
+#             return "API Error"
+    
+#     else:
+#         return "Invalid city name or zip code"
+    
+
+
+# if __name__ == "__main__":
+#     cityOrZip = input("Enter City or Zip Code: ")
+#     print(getTemp(cityOrZip)[0], "\N{DEGREE SIGN}F", "and", getTemp(cityOrZip)[1])
 
     
     
