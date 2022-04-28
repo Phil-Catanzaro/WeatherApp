@@ -19,17 +19,7 @@ app = Flask(__name__) #creating flask app
  
 @app.route("/") #decorator that Flask uses to connect URL endpoints with code contained in functions
 def weather_form():
-    
     return render_template('weather-form.html')
-
-    # city = request.args.get("city", "")
-    # return (
-        # """<form action="" method="get">
-        #     <input type="text" name="city">
-        #     <input type="submit" value="Get Temperature">
-        # </form>"""
-    #     + city #returns city name back to the url 
-    # )        
 
 
 @app.route("/", methods=["POST"]) #occurs when city parameter is added to url
@@ -44,7 +34,7 @@ def weather_form_post():
             dictionary = response.json() # respoonse as JSON
             temperature = dictionary["current"]["temp_f"]
             description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
-            return(str(temperature))        
+            return render_template('weather-form.html', temperature = temperature)
         else:
             return "API Error"
     
@@ -80,31 +70,6 @@ def checkCityZip(city):
         else:
             return True
 
-    
-# @app.route("/<city>") #occurs when city parameter is added to url
-# #sanitize city/zipcode input
-# def getTemp(city):
-#     apiKey = "e1533dfe0d2449f9ac6210053222004"
-#     if (checkCityZip(city) == True):
-#         response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + city + "&aqi=no")
-#         if (response.status_code == 200): #if we reached website without error
-#             dictionary = response.json() # respoonse as JSON
-#             temperature = dictionary["current"]["temp_f"]
-#             description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
-#             return(str(temperature))        
-#         else:
-#             return "API Error"
-    
-#     else:
-#         return "Invalid city name or zip code"
-    
-
-
-# if __name__ == "__main__":
-#     cityOrZip = input("Enter City or Zip Code: ")
-#     print(getTemp(cityOrZip)[0], "\N{DEGREE SIGN}F", "and", getTemp(cityOrZip)[1])
-
-    
     
 #two lines below tell Python to start Flask development server when script is exeucted fromcommand line
 if __name__ == "__main__":
