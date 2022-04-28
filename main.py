@@ -18,8 +18,8 @@ import nltk #edit distance metrix used to test for word similarity when sanitizi
 app = Flask(__name__) #creating flask app
  
 @app.route("/") #decorator that Flask uses to connect URL endpoints with code contained in functions
-@app.route("/home") #decorator that Flask uses to connect URL endpoints with code contained in functions
 def weather_form():
+    
     return render_template('weather-form.html')
 
     # city = request.args.get("city", "")
@@ -34,24 +34,22 @@ def weather_form():
 
 @app.route("/", methods=["POST"]) #occurs when city parameter is added to url
 def weather_form_post():
-    city = request.form.get("text", "") #gets text from inputted form
-   #issue is that "city" is empty at this point 
-    return(str(city))
-    # city = city.strip() #stripping spaces from text
+    city = request.form.get("city") #gets text from inputted form
+    city = city.strip() #stripping spaces from text
     
-    # apiKey = "e1533dfe0d2449f9ac6210053222004"
-    # if (checkCityZip(city) == True):
-    #     response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + city + "&aqi=no")
-    #     if (response.status_code == 200): #if we reached website without error
-    #         dictionary = response.json() # respoonse as JSON
-    #         temperature = dictionary["current"]["temp_f"]
-    #         description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
-    #         return(str(temperature))        
-    #     else:
-    #         return "API Error"
+    apiKey = "e1533dfe0d2449f9ac6210053222004"
+    if (checkCityZip(city) == True):
+        response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + city + "&aqi=no")
+        if (response.status_code == 200): #if we reached website without error
+            dictionary = response.json() # respoonse as JSON
+            temperature = dictionary["current"]["temp_f"]
+            description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
+            return(str(temperature))        
+        else:
+            return "API Error"
     
-    # else:
-    #     return "Invalid city name or zip code"
+    else:
+        return "Invalid city name or zip code"
     
 
 def checkCityZip(city):
