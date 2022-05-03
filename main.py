@@ -24,12 +24,12 @@ def weather_form():
 
 @app.route("/", methods=["POST"]) #occurs when city parameter is added to url
 def weather_form_post():
-    city = request.form.get("city") #gets text from inputted form
-    city = city.strip() #stripping spaces from text
+    zipOrCity = request.form.get("city") #gets text from inputted form
+    zipOrCity = zipOrCity.strip() #stripping spaces from text
     
     apiKey = "e1533dfe0d2449f9ac6210053222004"
-    if (checkCityZip(city) == True):
-        response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + city + "&aqi=no")
+    if (checkCityZip(zipOrCity) == True):
+        response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + zipOrCity + "&aqi=no")
         if (response.status_code == 200): #if we reached website without error
             dictionary = response.json() # respoonse as JSON
             temperature = dictionary["current"]["temp_f"]
@@ -42,34 +42,42 @@ def weather_form_post():
         return "Invalid city name or zip code"
     
 
-def checkCityZip(city):
+#issue with two named cities (Washington DC, Fort worth, Kansas city, etc..)
+def checkCityZip(zipOrCity):
     engine = SearchEngine()
-    if (city.isalpha()): #city check
-        zipcodes = engine.by_city(city=city)
+    print(zipOrCity)
+
+    if ((zipOrCity[0]).isalpha()): #city check  
+        #checking first word of city to see if its a zipcode or city
+        print(zipOrCity)
+        zipcodes = engine.by_city(city=zipOrCity)
         
         #using edit distance to test for similarity in closest city and the search entry
-        nearestCity = zipcodes[0].major_city
-        distance = nltk.edit_distance(nearestCity, city) 
-
-        #find shorter word
-        if (len(city)<len(nearestCity)):
-            comparisonlength = len(city) 
-        else:
-            comparisonlength = len(nearestCity)
-        
-        #checking if distance between words is greater than length of the smallest word
-        if (distance > comparisonlength):
+        try:
+            nearestCity = zipcodes[0].major_city
+            distance = nltk.edit_distance(nearestCity, zipOrCity) 
+    
+            #find shorter word
+            if (len(zipOrCity)<len(nearestCity)):
+                comparisonlength = len(zipOrCity) 
+            else:
+                comparisonlength = len(nearestCity)
+            
+            #checking if distance between words is greater than length of the smallest word
+            if (distance > comparisonlength):
+                return False
+            else:
+                return True
+        except:
             return False
-        else:
-            return True
         
     else: #zipcode check
-        zipcodes = engine.by_zipcode(city)
+        zipcodes = engine.by_zipcode(zipOrCity)
+
         if (zipcodes is None): #checking to see if no matches for zipcode
             return False
         else:
             return True
-
     
 #two lines below tell Python to start Flask development server when script is exeucted fromcommand line
 if __name__ == "__main__":
