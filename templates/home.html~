@@ -1,9 +1,10 @@
-<!DOCTYPE html>
-<html>
+ <!DOCTYPE html>
+<html lang="en">
 <head>
-    <title></title>
+<title>Test</title>
 </head>
 <body>
-    <h1>Home Page</h1>
-</body>
-</html>
+<form method="POST">
+    <input type="text" name = "city">
+    <input type="submit" value="Get Temperature">
+                             

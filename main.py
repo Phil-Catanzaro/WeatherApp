@@ -19,12 +19,13 @@ app = Flask(__name__) #creating flask app
  
 @app.route("/") #decorator that Flask uses to connect URL endpoints with code contained in functions
 def weather_form():
-    return render_template('weather-form.html')
+    return render_template('home.html')
 
 
 @app.route("/", methods=["POST"]) #occurs when city parameter is added to url
 def weather_form_post():
     zipOrCity = request.form.get("city") #gets text from inputted form
+    location = zipOrCity.capitalize() #nicely capitalized name for use in weather-form.html template
     zipOrCity = zipOrCity.strip() #stripping spaces from text
     
     apiKey = "e1533dfe0d2449f9ac6210053222004"
@@ -33,8 +34,9 @@ def weather_form_post():
         if (response.status_code == 200): #if we reached website without error
             dictionary = response.json() # respoonse as JSON
             temperature = dictionary["current"]["temp_f"]
+            feelsLike = dictionary["current"]["feelslike_f"]
             description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
-            return render_template('weather-form.html', temperature = temperature)
+            return render_template('weather-form.html', temperature = temperature, feelsLike = feelsLike, location = location)
         else:
             return "API Error"
     
