@@ -8,7 +8,7 @@
     <input type="text" name = "city">
     <input type="submit" value="Get Temperature">
 </form>
-<h1>{{zipOrCity}} Weather </h1>
+<h1>{{city}}, {{region}} Weather </h1>
 <h2>{{temperature}} &#8457</h2>
 <h3>Feels like: {{feelsLike}} &#8457 </h3>
 </body>

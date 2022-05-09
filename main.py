@@ -33,10 +33,14 @@ def weather_form_post():
         response = requests.get("https://api.weatherapi.com/v1/current.json?key="+ apiKey + "&q=" + zipOrCity + "&aqi=no")
         if (response.status_code == 200): #if we reached website without error
             dictionary = response.json() # respoonse as JSON
+            city = dictionary["location"]["name"]
+            region = dictionary["location"]["region"]
             temperature = dictionary["current"]["temp_f"]
             feelsLike = dictionary["current"]["feelslike_f"]
             description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
-            return render_template('weather-form.html', temperature = temperature, feelsLike = feelsLike, location = location)
+            icon = dictionary["current"]["condition"]["icon"].title() #title() capitalizes first letter of each word in string
+
+            return render_template('weather-form.html', temperature = temperature, feelsLike = feelsLike, city = city, region = region, icon=icon)
         else:
             return "API Error"
     
