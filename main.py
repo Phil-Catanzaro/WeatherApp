@@ -38,7 +38,7 @@ def weather_form_post():
             temperature = dictionary["current"]["temp_f"]
             feelsLike = dictionary["current"]["feelslike_f"]
             description = dictionary["current"]["condition"]["text"].title() #title() capitalizes first letter of each word in string
-            icon = dictionary["current"]["condition"]["icon"].title() #title() capitalizes first letter of each word in string
+            icon = dictionary["current"]["condition"]["icon"] 
 
             return render_template('weather-form.html', temperature = temperature, feelsLike = feelsLike, city = city, region = region, icon=icon)
         else:
@@ -51,8 +51,9 @@ def weather_form_post():
 #issue with two named cities (Washington DC, Fort worth, Kansas city, etc..)
 def checkCityZip(zipOrCity):
     engine = SearchEngine()
-    print(zipOrCity)
-
+    
+    if (zipOrCity == ""): #if nothing was inputted
+        return False
     if ((zipOrCity[0]).isalpha()): #city check  
         #checking first word of city to see if its a zipcode or city
         print(zipOrCity)
