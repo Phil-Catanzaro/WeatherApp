@@ -3,14 +3,18 @@
 <title>WeatherNow!</title>
 <body>
     <h1>
-        <img src="/graphics/weatherNOW.png" alt="WeatherNow Logo" style="width:128px;height:128px;">
+        <img src="/static/weatherNOW.png>
     </h1>
     <form method="POST">
         <input type="text" name = "city">
         <input type="submit" value="Get Temperature">
     </form>
-    <h2>{{city}}, {{region}} Weather </h2>
-    <img src={{icon}} alt="Weather Icon" width="75" height="75"> 
+    <div style="display:inline-block;horizational-align:left;">
+        <img src={{icon}} alt="Weather Icon" width="75" height="75">      
+    </div>
+    <div style="display:inline-block;"
+        <h2>{{city}}, {{region}} Weather </h2>  
+    </div>
     <h3>{{temperature}} &#8457</h3>
     <h4>Feels like: {{feelsLike}} &#8457 </h4>
 </body>

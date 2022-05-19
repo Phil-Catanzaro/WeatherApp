@@ -3,8 +3,9 @@
 <title>WeatherNow!</title>
 <body>
     <h1>
-        <img src="/graphics/weatherNOW.png" alt="WeatherNow Logo" style="width:128px;height:128px;">
+       <img src="{{url_for('static', filename='weatherNOW.png')}}" />
     </h1>
+  </body> 
     <form method="POST">
         <input type="text" name = "city">
         <input type="submit" value="Get Temperature">
