@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <title>WeatherNow!</title>
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+</style> 
+<img src="{{url_for('static', filename='weatherNOW.png')}}" alt="weatherNOW Logo"  class="center" style="width:350px;height:70px;"/>
 <body>
-    <h1>
-       <img src="{{url_for('static', filename='weatherNOW.png')}}" />
-    </h1>
-  </body> 
+    <div style = "text-align:center">
     <form method="POST">
         <input type="text" name = "city">
         <input type="submit" value="Get Temperature">
     </form>
-    <div style="display:inline-block;horizational-align:left;">
-        <img src={{icon}} alt="Weather Icon" width="75" height="75">      
-    </div>
-    <div style="display:inline-block;"
-        <h2>{{city}}, {{region}} Weather </h2>  
-    </div>
+    <img src={{icon}} alt="Weather Icon" width="75" height="75">      
+    <h2>{{city}}, {{region}} Weather </h2>  
     <h3>{{temperature}} &#8457</h3>
     <h4>Feels like: {{feelsLike}} &#8457 </h4>
+    </div>
 </body>
 </html>

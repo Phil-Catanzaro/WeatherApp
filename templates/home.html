@@ -12,11 +12,13 @@
 </style> 
 </head>
 <img src="{{url_for('static', filename='weatherNOW.png')}}" alt="weatherNOW Logo"  class="center" style="width:350px;height:70px;"/>
-<body> 
+<body>
+    <div style="text-align:center">
     <form method="POST">
         <input type="text" name = "city">
         <input type="submit" value="Get Temperature">
-    </form> 
+    </form>
+    </div>
 </body>
 </html> 
 

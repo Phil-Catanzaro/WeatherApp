@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <title>WeatherNow!</title>
+<style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+</style> 
+<img src="{{url_for('static', filename='weatherNOW.png')}}" alt="weatherNOW Logo"  class="center" style="width:350px;height:70px;"/>
 <body>
-    <h1>
-        <img src="/static/weatherNOW.png>
-    </h1>
     <form method="POST">
         <input type="text" name = "city">
         <input type="submit" value="Get Temperature">
