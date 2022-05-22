@@ -45,7 +45,8 @@ def weather_form_post():
             return "API Error"
     
     else:
-        return "Invalid city name or zip code"
+        return render_template('invalid.html')
+    "Invalid city name or zip code"
     
 
 #issue with two named cities (Washington DC, Fort worth, Kansas city, etc..)
